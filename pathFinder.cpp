@@ -258,12 +258,12 @@ void initialise(node graph[numVert][numVert]) {
 
     graph[0][3].direction = UP; graph[3][0].direction = DOWN;
     graph[1][2].direction = RIGHT; graph[2][1].direction = LEFT; 
-    graph[1][5].direction = DOWN; graph[5][1].direction = UP;
+    graph[1][5].direction = DOWN; graph[5][1].direction = REVERSE; // platform
     graph[1][8].direction = UP; graph[8][1].direction = DOWN;
     graph[2][3].direction = RIGHT; graph[3][2].direction = LEFT;
     graph[2][7].direction = UP; graph[7][2].direction = REVERSE; // parcel
     graph[3][4].direction = RIGHT; graph[4][3].direction = LEFT;
-    graph[4][6].direction = DOWN; graph[6][4].direction = UP;
+    graph[4][6].direction = DOWN; graph[6][4].direction = REVERSE; // platform
     graph[4][11].direction = UP; graph[11][4].direction = DOWN;
     graph[8][9].direction = RIGHT; graph[9][8].direction = LEFT;
     graph[8][15].direction = UP; graph[15][8].direction = LEFT; // bend
