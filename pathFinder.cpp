@@ -252,12 +252,12 @@ void initialise(node graph[numVert][numVert]) {
     graph[4][6].direction = DOWN; graph[6][4].direction = UP;
     graph[4][11].direction = UP; graph[11][4].direction = DOWN;
     graph[8][9].direction = RIGHT; graph[9][8].direction = LEFT;
-    graph[8][15].direction = UP; graph[15][8].direction = DOWN; // bend
+    graph[8][15].direction = UP; graph[15][8].direction = LEFT; // bend
     graph[9][10].direction = RIGHT; graph[10][9].direction = LEFT;
     graph[9][13].direction = UP; graph[13][9].direction = DOWN;
     graph[10][11].direction = RIGHT; graph[11][10].direction = LEFT;
     graph[10][12].direction = DOWN; graph[12][10].direction = UP;
-    graph[11][16].direction = UP; graph[16][11].direction = DOWN;// bend
+    graph[11][16].direction = UP; graph[16][11].direction = RIGHT;// bend
     graph[13][14].direction = LEFT; graph[14][13].direction = RIGHT;
     graph[13][15].direction = UP; graph[15][13].direction = DOWN;
     graph[15][16].direction = RIGHT; graph[16][15].direction = LEFT;
