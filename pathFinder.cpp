@@ -7,7 +7,7 @@ using namespace std;
 #define srcParent -1
 #define MAX_DIST INT16_MAX
 
-enum direction {LEFT, RIGHT, UP, DOWN, UNREACHABLE};
+enum direction {LEFT, RIGHT, UP, DOWN, REVERSE, UNREACHABLE};
 typedef struct {
     int distance;
     direction direction;
@@ -50,27 +50,35 @@ int main()
     int bestPath[numVert];
 
     // contains directions to take in path order
-    direction bestPathDirections[numVert];
+    direction bestPathDirections[numVert - 1];
 
     // distance[i] will hold the shortest distance from source to i
     int distance[numVert]; 
 
     // fill bestPath with the best path
-    dijkstra(graph, 17, 5, bestPath, bestPathDirections, distance);
+    dijkstra(graph, 0, 17, bestPath, bestPathDirections, distance);
     returnDirection(graph, bestPath, bestPathDirections);
 
     // for printing best path
     printPath(bestPath, bestPathDirections);
 
     // prints distance from source to every node
-    printDistance(distance);
+    //printDistance(distance);
 
     // more checks
-    dijkstra(graph, 14, 6, bestPath, bestPathDirections, distance);
+    dijkstra(graph, 17, 5, bestPath, bestPathDirections, distance);
+    returnDirection(graph, bestPath, bestPathDirections);
+    printPath(bestPath, bestPathDirections);
+
+    dijkstra(graph, 5, 7, bestPath, bestPathDirections, distance);
     returnDirection(graph, bestPath, bestPathDirections);
     printPath(bestPath, bestPathDirections);
 
     dijkstra(graph, 7, 6, bestPath, bestPathDirections, distance);
+    returnDirection(graph, bestPath, bestPathDirections);
+    printPath(bestPath, bestPathDirections);
+
+    dijkstra(graph, 6, 12, bestPath, bestPathDirections, distance);
     returnDirection(graph, bestPath, bestPathDirections);
     printPath(bestPath, bestPathDirections);
 
@@ -94,6 +102,9 @@ void printDirection(direction dir) {
             return;
         case DOWN:
             cout << "DOWN ";
+            return;
+        case REVERSE:
+            cout << "REVERSE ";
             return;
         case UNREACHABLE:
             return;
@@ -131,8 +142,11 @@ void returnPath(int parent[numVert], int j, int bestPath[numVert], int *index)
 
 void returnDirection(node graph[numVert][numVert], int bestPath[numVert], direction bestPathDirections[numVert]) {
     for (int i = 0; i < numVert-1; i++) {
-        bestPathDirections[i] = graph[bestPath[i]][bestPath[i+1]].direction;
-    }
+        if (bestPath[i+1] != -1) {
+            bestPathDirections[i] = graph[bestPath[i]][bestPath[i+1]].direction;
+        }
+        else {bestPathDirections[i] = UNREACHABLE;}
+    }  
 }
 
 int minDistance(int distance[numVert], bool completedSet[numVert])
@@ -247,7 +261,7 @@ void initialise(node graph[numVert][numVert]) {
     graph[1][5].direction = DOWN; graph[5][1].direction = UP;
     graph[1][8].direction = UP; graph[8][1].direction = DOWN;
     graph[2][3].direction = RIGHT; graph[3][2].direction = LEFT;
-    graph[2][7].direction = UP; graph[7][2].direction = DOWN;
+    graph[2][7].direction = UP; graph[7][2].direction = REVERSE; // parcel
     graph[3][4].direction = RIGHT; graph[4][3].direction = LEFT;
     graph[4][6].direction = DOWN; graph[6][4].direction = UP;
     graph[4][11].direction = UP; graph[11][4].direction = DOWN;
@@ -256,10 +270,10 @@ void initialise(node graph[numVert][numVert]) {
     graph[9][10].direction = RIGHT; graph[10][9].direction = LEFT;
     graph[9][13].direction = UP; graph[13][9].direction = DOWN;
     graph[10][11].direction = RIGHT; graph[11][10].direction = LEFT;
-    graph[10][12].direction = DOWN; graph[12][10].direction = UP;
-    graph[11][16].direction = UP; graph[16][11].direction = RIGHT;// bend
-    graph[13][14].direction = LEFT; graph[14][13].direction = RIGHT;
+    graph[10][12].direction = DOWN; graph[12][10].direction = REVERSE; // parcel
+    graph[11][16].direction = UP; graph[16][11].direction = RIGHT; // bend
+    graph[13][14].direction = LEFT; graph[14][13].direction = REVERSE; // parcel
     graph[13][15].direction = UP; graph[15][13].direction = DOWN;
     graph[15][16].direction = RIGHT; graph[16][15].direction = LEFT;
-    graph[16][17].direction = DOWN; graph[17][16].direction = UP;
+    graph[16][17].direction = DOWN; graph[17][16].direction = REVERSE; // parcel
 } 
