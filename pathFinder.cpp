@@ -7,9 +7,18 @@ using namespace std;
 #define srcParent -1
 #define MAX_DIST INT16_MAX
 
-enum direction {LEFT, RIGHT, UP, DOWN, REVERSE, UNREACHABLE};
+enum direction: uint8_t
+{
+    RIGHT,
+    UP,
+    LEFT,
+    DOWN,
+    REVERSE,
+    FINISH,
+    UNREACHABLE,
+};
 typedef struct {
-    int distance;
+    uint8_t distance;
     direction direction;
 } node;
 
@@ -86,45 +95,12 @@ int main()
     returnDirection(graph, bestPath, bestPathDirections);
     printPath(bestPath, bestPathDirections);
 
+    dijkstra(graph, 5, 0, bestPath, bestPathDirections, distance);
+    returnDirection(graph, bestPath, bestPathDirections);
+    printPath(bestPath, bestPathDirections);
+
     return 0;
 }
-
-void printDirection(direction dir) {
-    switch (dir) {
-        case LEFT:
-            cout << "LEFT ";
-            return;
-        case RIGHT:
-            cout << "RIGHT ";
-            return;
-        case UP:
-            cout << "UP ";
-            return;
-        case DOWN:
-            cout << "DOWN ";
-            return;
-        case REVERSE:
-            cout << "REVERSE ";
-            return;
-        case UNREACHABLE:
-            return;
-    }
-}
-
-void printPath(int bestPath[numVert], direction bestPathDirections[numVert])
-{
-    // for printing best path
-    cout << endl;
-    cout << "Optimum path: ";
-    for (int i = 0; i < numVert; i++) {
-        if (bestPath[i] != -1) {
-            cout << bestPath[i] << ' ';
-            printDirection(bestPathDirections[i]);
-        } 
-    }
-    cout << endl;
-}
-
 
 void returnPath(int parent[numVert], int j, int bestPath[numVert], int *index)
 {
@@ -162,15 +138,6 @@ int minDistance(int distance[numVert], bool completedSet[numVert])
         }
     // return vertex with min distance (vertices are represented by indices)
     return min_index;
-}
-
-void printDistance(int distance[numVert])
-{
-    cout << endl;
-    cout << "Vertex \t Distance from Source" << endl;
-    for (int i = 0; i < numVert; i++) {
-        cout << i << " \t\t\t\t" << distance[i] << endl;
-    }
 }
 
 void dijkstra(node graph[numVert][numVert], int source, int destination, int bestPath[numVert], direction bestPathDirections[numVert], int distance[numVert]) {
@@ -235,7 +202,7 @@ void initialise(node graph[numVert][numVert]) {
             graph[i][j].distance = 0;
         }
     }
-    graph[0][3].distance = 46; graph[3][0].distance = 46;
+        graph[0][3].distance = 46; graph[3][0].distance = 46;
     graph[1][2].distance = 71; graph[2][1].distance = 71; 
     graph[1][5].distance = 46; graph[5][1].distance = 46;
     graph[1][8].distance = 85; graph[8][1].distance = 85;
@@ -245,35 +212,84 @@ void initialise(node graph[numVert][numVert]) {
     graph[4][6].distance = 46; graph[6][4].distance = 46;
     graph[4][11].distance = 85; graph[11][4].distance = 85;
     graph[8][9].distance = 102; graph[9][8].distance = 102;
-    graph[8][15].distance = 76 + 103; graph[15][8].distance = 76 + 103; // bend
+    graph[8][15].distance = 179; graph[15][8].distance = 179; // bend
     graph[9][10].distance = 35; graph[10][9].distance = 35;
     graph[9][13].distance = 37; graph[13][9].distance = 37;
     graph[10][11].distance = 72; graph[11][10].distance = 72;
     graph[10][12].distance = 30; graph[12][10].distance = 30;
-    graph[11][16].distance = 76 + 63; graph[16][11].distance = 76 + 63;// bend
+    graph[11][16].distance = 139; graph[16][11].distance = 139;// bend
     graph[13][14].distance = 45; graph[14][13].distance = 45;
     graph[13][15].distance = 39; graph[15][13].distance = 39;
     graph[15][16].distance = 42; graph[16][15].distance = 42;
     graph[16][17].distance = 38; graph[17][16].distance = 38;
 
-    graph[0][3].direction = UP; graph[3][0].direction = DOWN;
+    graph[0][3].direction = UP; graph[3][0].direction = FINISH;
     graph[1][2].direction = RIGHT; graph[2][1].direction = LEFT; 
-    graph[1][5].direction = DOWN; graph[5][1].direction = REVERSE; // platform
+    graph[1][5].direction = DOWN; graph[5][1].direction = REVERSE;
     graph[1][8].direction = UP; graph[8][1].direction = DOWN;
     graph[2][3].direction = RIGHT; graph[3][2].direction = LEFT;
-    graph[2][7].direction = UP; graph[7][2].direction = REVERSE; // parcel
+    graph[2][7].direction = UP; graph[7][2].direction = REVERSE;
     graph[3][4].direction = RIGHT; graph[4][3].direction = LEFT;
-    graph[4][6].direction = DOWN; graph[6][4].direction = REVERSE; // platform
+    graph[4][6].direction = DOWN; graph[6][4].direction = REVERSE;
     graph[4][11].direction = UP; graph[11][4].direction = DOWN;
     graph[8][9].direction = RIGHT; graph[9][8].direction = LEFT;
-    graph[8][15].direction = UP; graph[15][8].direction = LEFT; // bend
+    graph[8][15].direction = UP; graph[15][8].direction = DOWN; // bend
     graph[9][10].direction = RIGHT; graph[10][9].direction = LEFT;
     graph[9][13].direction = UP; graph[13][9].direction = DOWN;
     graph[10][11].direction = RIGHT; graph[11][10].direction = LEFT;
-    graph[10][12].direction = DOWN; graph[12][10].direction = REVERSE; // parcel
-    graph[11][16].direction = UP; graph[16][11].direction = RIGHT; // bend
-    graph[13][14].direction = LEFT; graph[14][13].direction = REVERSE; // parcel
+    graph[10][12].direction = DOWN; graph[12][10].direction = REVERSE;
+    graph[11][16].direction = UP; graph[16][11].direction = DOWN;// bend
+    graph[13][14].direction = LEFT; graph[14][13].direction = REVERSE;
     graph[13][15].direction = UP; graph[15][13].direction = DOWN;
     graph[15][16].direction = RIGHT; graph[16][15].direction = LEFT;
-    graph[16][17].direction = DOWN; graph[17][16].direction = REVERSE; // parcel
+    graph[16][17].direction = DOWN; graph[17][16].direction = REVERSE;
 } 
+
+// replace with Serial.write()
+void printDistance(int distance[numVert])
+{
+    cout << endl;
+    cout << "Vertex \t Distance from Source" << endl;
+    for (int i = 0; i < numVert; i++) {
+        cout << i << " \t\t\t\t" << distance[i] << endl;
+    }
+}
+
+void printDirection(direction dir) {
+    switch (dir) {
+        case LEFT:
+            cout << "LEFT ";
+            return;
+        case RIGHT:
+            cout << "RIGHT ";
+            return;
+        case UP:
+            cout << "UP ";
+            return;
+        case DOWN:
+            cout << "DOWN ";
+            return;
+        case REVERSE:
+            cout << "REVERSE ";
+            return;
+        case FINISH:
+            cout << "FINISH ";
+            return;
+        case UNREACHABLE:
+            return;
+    }
+}
+
+void printPath(int bestPath[numVert], direction bestPathDirections[numVert])
+{
+    // for printing best path
+    cout << endl;
+    cout << "Optimum path: ";
+    for (int i = 0; i < numVert; i++) {
+        if (bestPath[i] != -1) {
+            cout << bestPath[i] << ' ';
+            printDirection(bestPathDirections[i]);
+        } 
+    }
+    cout << endl;
+}
